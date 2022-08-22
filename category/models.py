@@ -1,3 +1,21 @@
+from curses.ascii import islower
 from django.db import models
+from django.utils.text import slugify
 
-# Create your models here.
+
+
+class Category(models.Model):
+    slug = models.SlugField(max_length=70, primary_key=True, islower=True)
+    name = models.CharField(max_length=60, unique=True)
+
+    def save(self, *args, **kwargs):
+        self.slug = slugify(self.name)
+        super().save(*args, **kwargs)
+    
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        ordering = 'slug'
+        verbose_name = 'Category'
+        verbose_name_plural = 'Categories'
