@@ -53,6 +53,7 @@ INSTALLED_APPS = [
 
     # my apps
     'account',
+    'profile1',
     'cart',
     'category',
     'comment',
@@ -110,7 +111,7 @@ DATABASES = {
 # Password validation
 # https://docs.djangoproject.com/en/4.1/ref/settings/#auth-password-validators
 
-# AUTH_USER_MODEL = 'account.CustomUser'     
+AUTH_USER_MODEL = 'account.CustomUser'     
 
 
 AUTH_PASSWORD_VALIDATORS = [
