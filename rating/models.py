@@ -26,6 +26,6 @@ class Mark:
 class Review(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='reviews')
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='reviews')
-    text = models.TextField()
-    rating = models.ImageField(choices=Mark.marks)
+    review = models.TextField()
+    rating = models.IntegerField(choices=Mark.marks)
     created_at = models.DateTimeField(auto_now_add=True)

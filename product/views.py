@@ -2,22 +2,46 @@ from rest_framework import permissions
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.decorators import action
-
+from rest_framework.filters import SearchFilter
+from django_filters.rest_framework import DjangoFilterBackend
 
 from rating.serializers import ReviewSerializer
 from . import serializers
 from .models import Product
+from .permissions import IsAuthor
 
 
 class ProductViewSet(ModelViewSet):
     queryset = Product.objects.all()
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly,]
+    filter_backends = (DjangoFilterBackend, SearchFilter,)
+    filterset_fields = ('category', 'owner',)
+    search_fields = ('title',)
+    
 
     def get_serializer_class(self):
         if self.action == 'list':
             return serializers.ProductListSerializer
-        return serializers.ProductListDetailSerializer
+        elif self.action in ('create', 'update', 'partial_update'):
+            return serializers.ProductCreateSerializer
+        return serializers.ProductDetailSerializer
 
+
+    def perform_create(self, serializer):
+        serializer.save(owner=self.request.user)        # автоматически заполняет поле owner_id
+
+
+    def get_permissions(self):
+        
+        # Создавать посты может зарегистрированный юзер
+        if self.action in ('create', 'reviews',):
+            return [permissions.IsAuthenticated()]
+
+        # Изменять и удалять может только автор поста
+        elif self.action in ('update', 'partial_update', 'destroy',):
+            return [permissions.IsAuthenticated(), IsAuthor()]
+        # Просматривать могут все
+        else:
+            return [permissions.AllowAny()]
 
     # api/v1/products/<id>/reviews/
     @action(['GET', 'POST'], detail=True)
