@@ -1,4 +1,3 @@
-from curses.ascii import islower
 from django.db import models
 from django.utils.text import slugify
 

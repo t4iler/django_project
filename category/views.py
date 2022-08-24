@@ -7,7 +7,7 @@ from . import serializers
 
 class CategoryViewSet(ModelViewSet):
     queryset =  Category.objects.all()
-    permission_classes = (permissions.IsAdminUser)
+    permission_classes = (permissions.IsAdminUser,)
 
     def get_serializer_class(self):
         return serializers.CategoryListSerializer
