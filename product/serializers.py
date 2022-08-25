@@ -17,7 +17,7 @@ class ProductListSerializer(serializers.ModelSerializer):
 
 class ProductListDetailSerializer(serializers.ModelSerializer):
     class Meta:
-        models = Product
+        model = Product
         fields = '__all__'
 
     def to_representation(self, instance):
@@ -25,4 +25,3 @@ class ProductListDetailSerializer(serializers.ModelSerializer):
         repr['rating'] = instance.reviews.aggregate(Avg('rating'))['rating__avg']
         repr['reviews'] = instance.reviews.count()
         return repr
-
