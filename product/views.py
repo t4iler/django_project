@@ -8,7 +8,7 @@ from rest_framework.pagination import PageNumberPagination
 
 from rating.serializers import ReviewSerializer
 from . import serializers
-from .models import Product
+from .models import Product, Favorites
 from .permissions import IsAuthor
 
 
@@ -18,6 +18,7 @@ class StandartResultPagination(PageNumberPagination):
     page_query_param = 'page'
     max_page_size = 1000
 
+
 class ProductViewSet(ModelViewSet):
     queryset = Product.objects.all()
     filter_backends = (DjangoFilterBackend, SearchFilter,)
@@ -25,7 +26,6 @@ class ProductViewSet(ModelViewSet):
     search_fields = ('title',)
     pagination_class = StandartResultPagination
 
-    
 
     def get_serializer_class(self):
         if self.action == 'list':
@@ -42,7 +42,7 @@ class ProductViewSet(ModelViewSet):
     def get_permissions(self):
         
         # Создавать посты может зарегистрированный юзер
-        if self.action in ('create', 'reviews',):
+        if self.action in ('create', 'reviews', 'favorites'):
             return [permissions.IsAuthenticated()]
 
         # Изменять и удалять может только автор поста
@@ -65,3 +65,14 @@ class ProductViewSet(ModelViewSet):
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response(serializer.data, status=201)
+
+
+        # api/v1/products/<id>/favorites
+    @action(['POST'], detail=True) #если не указывать "detail=True", "pk" не нужен
+    def favorites(self, request, pk):
+        product = self.get_object()
+        if request.user.favorites.filter(product=product).exists():
+            request.user.favorites.filter(product=product).delete()
+            return Response('Removed product from favorites!', status=204)
+        Favorites.objects.create(product=product, owner=request.user) 
+        return Response('Product added to favorites!', status=201)

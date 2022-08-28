@@ -32,3 +32,15 @@ class Product(models.Model):
 class ProductImages(models.Model):
     image = models.ImageField(upload_to='images/')
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='images')
+
+
+
+class Favorites(models.Model):
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='favorites')
+    owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name='favorites')
+    added_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ('added_at',)
+        unique_together = ['product', 'owner'] 
+        # если такой пост есть в "favorites", мы не можем добавить этот же пост снова
