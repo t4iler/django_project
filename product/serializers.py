@@ -2,7 +2,7 @@ from xml.etree.ElementInclude import include
 from rest_framework import serializers
 from django.db.models import Avg
 
-from .models import Product, ProductImages
+from .models import Product, ProductImages, Favorites
 
 
 
@@ -58,3 +58,13 @@ class ProductCreateSerializer(serializers.ModelSerializer):
 
         
     
+
+class FavoriteSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Favorites
+        fields = '__all__'
+    
+    def to_representation(self, instance):
+        repr = super().to_representation(instance)
+        repr['product'] = ProductListSerializer(instance.product).data
+        return repr

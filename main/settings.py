@@ -56,7 +56,6 @@ INSTALLED_APPS = [
     'profile1',
     'cart',
     'category',
-    'order',
     'product',
     'rating'
 ]
