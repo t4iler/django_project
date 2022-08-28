@@ -13,9 +13,10 @@ from .permissions import IsAuthor
 
 
 
-
-
-
+class StandartResultPagination(PageNumberPagination):
+    page_size = 1
+    page_query_param = 'page'
+    max_page_size = 1000
 
 
 class ProductViewSet(ModelViewSet):
@@ -23,7 +24,8 @@ class ProductViewSet(ModelViewSet):
     filter_backends = (DjangoFilterBackend, SearchFilter,)
     filterset_fields = ('category', 'owner',)
     search_fields = ('title',)
-    
+    pagination_class = StandartResultPagination
+
 
     def get_serializer_class(self):
         if self.action == 'list':

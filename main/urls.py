@@ -61,6 +61,7 @@ urlpatterns = [
     path('api/v1/', include(router.urls)),
 	path('api/v1/cart/', include('cart.urls')),
     path('api/v1/', include('profile1.urls')),
+    path('api/v1/orders/', include('order.urls')),
 ]
 
 
