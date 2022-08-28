@@ -4,6 +4,7 @@ from rest_framework.viewsets import ModelViewSet
 from rest_framework.decorators import action
 from rest_framework.filters import SearchFilter
 from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework.pagination import PageNumberPagination
 
 from rating.serializers import ReviewSerializer
 from . import serializers
@@ -11,11 +12,19 @@ from .models import Product
 from .permissions import IsAuthor
 
 
+
+class StandartResultPagination(PageNumberPagination):
+    page_size = 1
+    page_query_param = 'page'
+    max_page_size = 1000
+
 class ProductViewSet(ModelViewSet):
     queryset = Product.objects.all()
     filter_backends = (DjangoFilterBackend, SearchFilter,)
     filterset_fields = ('category', 'owner',)
     search_fields = ('title',)
+    pagination_class = StandartResultPagination
+
     
 
     def get_serializer_class(self):
