@@ -4,11 +4,18 @@ from rest_framework.viewsets import ModelViewSet
 from rest_framework.decorators import action
 from rest_framework.filters import SearchFilter
 from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework.pagination import PageNumberPagination
 
 from rating.serializers import ReviewSerializer
 from . import serializers
 from .models import Product, Favorites
 from .permissions import IsAuthor
+
+
+
+
+
+
 
 
 class ProductViewSet(ModelViewSet):
